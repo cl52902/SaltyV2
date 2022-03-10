@@ -7,11 +7,11 @@
     <Filter Include="memory">
       <UniqueIdentifier>{DEA8820D-CA4A-ADE3-B305-C1379F463434}</UniqueIdentifier>
     </Filter>
-    <Filter Include="menu">
-      <UniqueIdentifier>{8A78880B-F681-887C-7FFD-9E7CEB05947C}</UniqueIdentifier>
-    </Filter>
     <Filter Include="hooking">
       <UniqueIdentifier>{b984c2d8-7f91-49ad-b5a4-d395146ef50b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{8A78880B-F681-887C-7FFD-9E7CEB05947C}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,7 +43,7 @@
     </ClInclude>
     <ClInclude Include="src\gta_util.hpp" />
     <ClInclude Include="src\gui\base_tab.h">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\invoker.hpp" />
     <ClInclude Include="src\logger.hpp" />
@@ -74,28 +74,19 @@
     <ClInclude Include="src\script_mgr.hpp" />
     <ClInclude Include="src\vmt_hook.hpp" />
     <ClInclude Include="src\gui\misc.h">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\features.hpp">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\gui.hpp">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\natives_logging.hpp">
-      <Filter>menu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\pointers.hpp">
-      <Filter>menu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\function_types.hpp">
-      <Filter>menu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\hooking.hpp">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\crash.hpp">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\hooking\Hooking.Invoke.h">
       <Filter>hooking</Filter>
@@ -178,8 +169,11 @@
     <ClInclude Include="src\gta\invite.hpp">
       <Filter>gta</Filter>
     </ClInclude>
+    <ClInclude Include="src\hooking.hpp" />
+    <ClInclude Include="src\pointers.hpp" />
+    <ClInclude Include="src\function_types.hpp" />
     <ClInclude Include="src\gta\structs.hpp">
-      <Filter>menu</Filter>
+      <Filter>gta</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -188,7 +182,7 @@
     <ClCompile Include="src\fiber_pool.cpp" />
     <ClCompile Include="src\fonts.cpp" />
     <ClCompile Include="src\gui\base_tab.cpp">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\invoker.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -212,25 +206,19 @@
     <ClCompile Include="src\script_mgr.cpp" />
     <ClCompile Include="src\vmt_hook.cpp" />
     <ClCompile Include="src\gui\misc.cpp">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\gui\features.cpp">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\gui\gui.cpp">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\gui\natives_logging.cpp">
-      <Filter>menu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\pointers.cpp">
-      <Filter>menu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hooking.cpp">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\gui\crash.cpp">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\hooking\Hooking.Patterns.cpp">
       <Filter>hooking</Filter>
@@ -241,10 +229,12 @@
     <ClCompile Include="src\hooking\_Hooking.cpp">
       <Filter>hooking</Filter>
     </ClCompile>
+    <ClCompile Include="src\hooking.cpp" />
+    <ClCompile Include="src\pointers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\gui\protection_research.txt">
-      <Filter>menu</Filter>
+      <Filter>gui</Filter>
     </Text>
   </ItemGroup>
 </Project>

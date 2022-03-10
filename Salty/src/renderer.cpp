@@ -110,16 +110,14 @@ namespace big
 
 			switch (wparam)
 			{
-			case VK_INSERT:
 			case VK_DELETE:
+			case VK_INSERT:
 				if (g_gui.m_opened)
 					GetCursorPos(&cursor_coords);
 				else if (cursor_coords.x + cursor_coords.y != 0)
 					SetCursorPos(cursor_coords.x, cursor_coords.y);
-
 				g_gui.m_opened ^= true;
-					break;
-
+				break;
 			case VK_END:
 				g_running = false;
 				break;

@@ -7,7 +7,6 @@
 #include "hooking.hpp"
 #include "script_mgr.hpp"
 
-#include "gui/features.hpp"
 #include "gui.hpp"
 #include "gui/misc.h"
 #include "gui/crash.hpp"
@@ -180,8 +179,6 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 
 				LOG(RAW_GREEN_TO_CONSOLE) << "Adding feature scripts";
 
-				g_script_mgr.add_script(std::make_unique<script>(&features::script_func));
-
 				g_script_mgr.add_script(std::make_unique<script>(&gui::script_func));
 
 				LOG(RAW_GREEN_TO_CONSOLE) << "Enabling hooking";
@@ -204,8 +201,6 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				}
 
 				big::crash::disable();
-
-				features::show_bye();
 
 				LOG(RAW_GREEN_TO_CONSOLE) << "Disabling hooking";
 

@@ -153,7 +153,6 @@
     <ClInclude Include="src\gta\VehicleValues.h" />
     <ClInclude Include="src\gta\Weapons.h" />
     <ClInclude Include="src\gui\crash.hpp" />
-    <ClInclude Include="src\gui\features.hpp" />
     <ClInclude Include="src\fiber_pool.hpp" />
     <ClInclude Include="src\fonts.hpp" />
     <ClInclude Include="src\function_types.hpp" />
@@ -198,7 +197,6 @@
     </ClCompile>
     <ClCompile Include="src\detour_hook.cpp" />
     <ClCompile Include="src\gui\crash.cpp" />
-    <ClCompile Include="src\gui\features.cpp" />
     <ClCompile Include="src\fiber_pool.cpp" />
     <ClCompile Include="src\fonts.cpp" />
     <ClCompile Include="src\gui\gui.cpp" />

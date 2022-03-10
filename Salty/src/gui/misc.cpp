@@ -4,7 +4,6 @@
 #include "logger.hpp"
 #include "pointers.hpp"
 #include "gta_util.hpp"
-#include "gui/features.hpp"
 #include "gta/net_object_mgr.hpp"
 #include "gta/structs.hpp"
 
@@ -241,7 +240,7 @@ namespace big::misc
 			if (blocked)
 			{
 				//notify
-				if (now > users[user_id]->block_time) features::add_user(src->get_net_data()->m_name);
+				//if (now > users[user_id]->block_time) features::add_user(src->get_net_data()->m_name);
 
 				users[user_id]->block_time = now + PERIOD_USER;
 			}

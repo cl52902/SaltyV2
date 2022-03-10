@@ -50,11 +50,10 @@ namespace big
 		sync_src = src;
 
 		rage::netObject* netObject = g_pointers->m_get_network_object(mgr, object_id, true);
-		bool user = misc::block_user(src);
 		bool owner = !is_owner(dst, netObject);
 		int16_t object_type = netObject == nullptr ? -1 : netObject->object_type;
 
-		bool blocked = misc::block_user(src, false) || owner;
+		bool blocked = owner;
 
 		char status[256] = "BLOCKED";
 
@@ -62,17 +61,10 @@ namespace big
 		{
 			if (blocked)
 			{
-				if (user) strcat(status, "_USER");
 				if (owner) strcat(status, "_OWNER");
 
 				misc::log_clone(LOG_FAIL, sync_src, "CREATE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-			}
-			else
-			{
-				misc::log_clone(LOG_PASS, sync_src, "CREATE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-			}
-			if (blocked)
-			{
+
 				return;
 			}
 		}
@@ -84,7 +76,6 @@ namespace big
 		__except (EXCEPTION_EXECUTE_HANDLER)
 		{
 			misc::log_clone(LOG_EXCEPTION, sync_src, "CREATE_ACK", 0, object_id, 0, 0, ack_code, true, "BLOCKED_EXCEPTION");
-			misc::block_user(sync_src, true);
 		}
 	}
 	static void clone_sync_ack(rage::CNetworkObjectMgr* mgr, rage::CNetGamePlayer* src, rage::CNetGamePlayer* dst, rage::datBitBuffer *buffer, uint16_t object_id, int32_t ack_code)
@@ -92,11 +83,10 @@ namespace big
 		sync_src = src;
 
 		rage::netObject* netObject = g_pointers->m_get_network_object(mgr, object_id, true);
-		bool user = misc::block_user(src);
 		bool owner = !is_owner(dst, netObject);
 		int16_t object_type = netObject == nullptr ? -1 : netObject->object_type;
 
-		bool blocked = misc::block_user(src, false) || owner;
+		bool blocked = owner;
 
 		char status[256] = "BLOCKED";
 
@@ -104,38 +94,21 @@ namespace big
 		{
 			if (blocked)
 			{
-				if (user) strcat(status, "_USER");
 				if (owner) strcat(status, "_OWNER");
 
 				misc::log_clone(LOG_FAIL, sync_src, "SYNC_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-			}
-			else
-			{
-				misc::log_clone(LOG_PASS, sync_src, "SYNC_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-			}
-			if (blocked)
-			{
-				//NOT DATBITBUFFER
-				//buffer->m_unkBit = buffer->m_maxBit;
+
 				return;
 			}
 		}
 
 		__try
 		{
-			//NOT DATBITBUFFER
-			//buffer_expand(buffer);
 			g_hooking->m_clone_sync_ack_hook.get_original<functions::clone_sync_ack_t>()(mgr, src, dst, buffer, object_id, ack_code);
-			//buffer_shrink(buffer);
 		}
 		__except (EXCEPTION_EXECUTE_HANDLER)
 		{
-			//NOT DATBITBUFFER
-			//buffer_shrink(buffer);
-			//buffer->m_unkBit = buffer->m_maxBit;
-
 			misc::log_clone(LOG_EXCEPTION, sync_src, "SYNC_ACK", 0, object_id, 0, 0, ack_code, true, "BLOCKED_EXCEPTION");
-			misc::block_user(sync_src, true);
 		}
 	}
 	static void clone_remove_ack(rage::CNetworkObjectMgr* mgr, rage::CNetGamePlayer* src, rage::CNetGamePlayer* dst, uint16_t object_id, int32_t ack_code)
@@ -143,11 +116,10 @@ namespace big
 		sync_src = src;
 
 		rage::netObject* netObject = g_pointers->m_get_network_object(mgr, object_id, true);
-		bool user = misc::block_user(src);
 		bool owner = !is_owner(dst, netObject);
 		int16_t object_type = netObject == nullptr ? -1 : netObject->object_type;
 
-		bool blocked = misc::block_user(src, false) || owner;
+		bool blocked = owner;
 
 		char status[256] = "BLOCKED";
 
@@ -155,17 +127,10 @@ namespace big
 		{
 			if (blocked)
 			{
-				if (user) strcat(status, "_USER");
 				if (owner) strcat(status, "_OWNER");
 
 				misc::log_clone(LOG_FAIL, sync_src, "REMOVE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-			}
-			else
-			{
-				misc::log_clone(LOG_PASS, sync_src, "REMOVE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-			}
-			if (blocked)
-			{
+
 				return;
 			}
 		}
@@ -177,7 +142,6 @@ namespace big
 		__except (EXCEPTION_EXECUTE_HANDLER)
 		{
 			misc::log_clone(LOG_EXCEPTION, sync_src, "REMOVE_ACK", 0, object_id, 0, 0, ack_code, true, "BLOCKED_EXCEPTION");
-			misc::block_user(sync_src, true);
 		}
 	}
 
@@ -187,11 +151,10 @@ namespace big
 		sync_type = rage::PACK;
 		sync_object_type = -1;
 
-		bool user = misc::block_user(src);
 		bool proto = misc::block_proto(src, rage::PACK, 0, 0);
 		bool flood = misc::flood_pack(src);
 
-		bool blocked = misc::block_user(src, false) || flood || proto;
+		bool blocked = flood || proto;
 
 		char status[256] = "BLOCKED";
 
@@ -199,18 +162,11 @@ namespace big
 		{
 			if (blocked)
 			{
-				if (user) strcat(status, "_USER");
 				if (proto) strcat(status, "_PROTO");
 				if (flood) strcat(status, "_FLOOD");
 
 				misc::log_clone(LOG_FAIL, sync_src, "PACK", -1, 0, 0, 0, 0, blocked, status);
-			}
-			else
-			{
-				misc::log_clone(LOG_PASS, sync_src, "PACK", -1, 0, 0, 0, 0, blocked, status);
-			}
-			if (blocked)
-			{
+
 				buffer->m_unkBit = buffer->m_maxBit;
 				return;
 			}
@@ -228,7 +184,6 @@ namespace big
 			buffer->m_unkBit = buffer->m_maxBit;
 
 			misc::log_clone(LOG_EXCEPTION, sync_src, "PACK", -1, 0, 0, 0, 0, true, "BLOCKED_EXCEPTION");
-			misc::block_user(src, true);
 		}
 	}
 
@@ -246,7 +201,6 @@ namespace big
 		sync_object_type = object_type;
 
 		rage::netObject* netObject = g_pointers->m_get_network_object(mgr, object_id, true);
-		bool user = misc::block_user(src);
 		bool type = object_type == rage::SUBMARINE || object_type == rage::PICKUP_PLACEMENT || object_type < rage::CAR || object_type > rage::TRAIN;
 		bool crash = misc::block_crash(n, data);
 		bool limit = misc::object_limit(object_type);
@@ -255,7 +209,7 @@ namespace big
 		bool owner = netObject != nullptr;
 		bool flood = misc::flood_create(sync_src, rage::CREATE);
 
-		bool blocked = misc::block_user(src, type || crash || limit || time) || owner || flood || proto;
+		bool blocked = type || crash || limit || time || owner || flood || proto;
 
 		char status[256] = "BLOCKED";
 
@@ -263,7 +217,6 @@ namespace big
 		{
 			if (blocked)
 			{
-				if (user) strcat(status, "_USER");
 				if (type) strcat(status, "_TYPE");
 				if (crash) strcat(status, "_CRASH");
 				if (limit) strcat(status, "_LIMIT");
@@ -273,19 +226,10 @@ namespace big
 				if (flood) strcat(status, "_FLOOD");
 
 				misc::log_clone(LOG_FAIL, sync_src, "CREATE", object_type, object_id, object_flag, timestamp, 0, blocked, status);
-			}
-			else
-			{
-				misc::log_clone(LOG_PASS, sync_src, "CREATE", object_type, object_id, object_flag, timestamp, 0, blocked, status);
-			}
 
-			if (blocked)
-			{
 				buffer->m_unkBit = buffer->m_maxBit;
-				//timestamp = 0;
 				return true;
 			}
-
 		}
 		
 		__try
@@ -300,7 +244,6 @@ namespace big
 			buffer->m_unkBit = buffer->m_maxBit;
 
 			misc::log_clone(LOG_EXCEPTION, sync_src, "CREATE", object_type, object_id, object_flag, timestamp, 0, true, "BLOCKED_EXCEPTION");
-			misc::block_user(src, true);
 		}
 		return true;
 	}
@@ -318,15 +261,14 @@ namespace big
 		sync_object_type = object_type;
 
 		rage::netObject* netObject = g_pointers->m_get_network_object(mgr, object_id, true);
-		bool user = misc::block_user(src);
 		bool type = object_type == rage::SUBMARINE || object_type == rage::PICKUP_PLACEMENT || object_type < rage::CAR || object_type > rage::TRAIN;
 		bool crash = misc::block_crash(n, data);
 		bool time = misc::event_time(src, timestamp);
 		bool proto = misc::block_proto(src, rage::SYNC, object_type, object_id);
-		bool owner = false;// !is_owner(src, netObject);
+		bool owner = false; // !is_owner(src, netObject);
 		bool change = netObject != nullptr && netObject->object_type != object_type;
 
-		bool blocked = misc::block_user(src, type || crash || time || change) || owner || proto;
+		bool blocked = type || crash || time || change || owner || proto;
 
 		char status[256] = "BLOCKED";
 
@@ -334,7 +276,6 @@ namespace big
 		{
 			if (blocked)
 			{
-				if (user) strcat(status, "_USER");
 				if (type) strcat(status, "_TYPE");
 				if (crash) strcat(status, "_CRASH");
 				if (time) strcat(status, "_TIME");
@@ -343,16 +284,8 @@ namespace big
 				if (change) strcat(status, "_CHANGE");
 
 				misc::log_clone(LOG_FAIL, sync_src, "SYNC", object_type, object_id, 0, timestamp, 0, blocked, status);
-			}
-			else
-			{
-				misc::log_clone(LOG_PASS, sync_src, "SYNC", object_type, object_id, 0, timestamp, 0, blocked, status);
-			}
 
-			if (blocked)
-			{
 				buffer->m_unkBit = buffer->m_maxBit;
-				//timestamp = 0;
 				return true;
 			}
 		}
@@ -369,7 +302,6 @@ namespace big
 			buffer->m_unkBit = buffer->m_maxBit;
 
 			misc::log_clone(LOG_EXCEPTION, sync_src, "SYNC", object_type, object_id, 0, timestamp, 0, true, "BLOCKED_EXCEPTION");
-			misc::block_user(src, true);
 		}
 		return true;
 	}
@@ -383,11 +315,10 @@ namespace big
 		sync_object_type = -1;
 
 		rage::netObject* netObject = g_pointers->m_get_network_object(mgr, object_id, true);
-		bool user = misc::block_user(src);
 		bool proto = misc::block_proto(src, rage::REMOVE, 0, object_id);
 		bool owner = !is_owner(src, netObject);
 
-		bool blocked = misc::block_user(src, false) || owner || proto;
+		bool blocked = owner || proto;
 
 		char status[256] = "BLOCKED";
 
@@ -395,18 +326,11 @@ namespace big
 		{
 			if (blocked)
 			{
-				if (user) strcat(status, "_USER");
 				if (proto) strcat(status, "_PROTO");
 				if (owner) strcat(status, "_OWNER");
 
 				misc::log_clone(LOG_FAIL, sync_src, "REMOVE", 0, object_id, 0, 0, 0, blocked, status);
-			}
-			else
-			{
-				misc::log_clone(LOG_PASS, sync_src, "REMOVE", 0, object_id, 0, 0, 0, blocked, status);
-			}
-			if (blocked)
-			{
+
 				return;
 			}
 		}
@@ -418,7 +342,6 @@ namespace big
 		__except (EXCEPTION_EXECUTE_HANDLER)
 		{
 			misc::log_clone(LOG_EXCEPTION, sync_src, "REMOVE", 0, object_id, 0, 0, 0, true, "BLOCKED_EXCEPTION");
-			misc::block_user(src, true);
 		}
 	}
 
@@ -428,14 +351,11 @@ namespace big
 
 		__try
 		{
-			//misc::log_generic(LOG_INTERNAL && LOG_PASS, "READ", false, "OK");
-
 			return g_hooking->m_sync_read_hook.get_original<functions::sync_read_t>()(netSyncTree, sync_type, sync_flag, buffer, netLogStub);
 		}
 		__except (EXCEPTION_EXECUTE_HANDLER)
 		{
 			misc::log_generic(LOG_EXCEPTION, "READ", true, "BLOCKED_EXCEPTION");
-			misc::block_user(sync_src, true);
 			return false;
 		}
 	}
@@ -443,6 +363,8 @@ namespace big
 	static bool sync_can_apply(rage::netSyncTree* netSyncTree, rage::netObject* netObject)
 	{
 		char status[256] = "BLOCKED";
+
+		uint32_t hash = netSyncTree->m_sync_tree_node->model(netObject->object_type);
 
 		bool model = !misc::model_valid(netSyncTree, netObject->object_type);
 		bool close = misc::object_close(netSyncTree, sync_type, sync_flag, netObject->object_type);
@@ -455,28 +377,13 @@ namespace big
 		{
 			if (blocked)
 			{
-				uint32_t hash = netSyncTree->m_sync_tree_node->model(netObject->object_type);
-
 				if (model) strcat(status, "_MODEL");
 				if (close) strcat(status, "_CLOSE");
 				if (location) strcat(status, "_LOCATION");
 				if (flood) strcat(status, "_FLOOD");
 
-				if (model)
-				{
-					misc::log_model(LOG_INTERNAL && LOG_FAIL, "MODEL", netObject->object_type, hash, blocked, status);
-				}
-				//else
-				//{
-				//	misc::log_generic(LOG_INTERNAL && LOG_FAIL, "APPLY", blocked, status);
-				//}
-			}
-			//else
-			//{
-			//	misc::log_generic(LOG_INTERNAL && LOG_PASS, "APPLY", blocked, status);
-			//}
-			if (blocked)
-			{
+				misc::log_model(LOG_INTERNAL && LOG_FAIL, "MODEL", netObject->object_type, hash, blocked, status);
+
 				return false;
 			}
 		}
@@ -488,7 +395,6 @@ namespace big
 		__except (EXCEPTION_EXECUTE_HANDLER)
 		{
 			misc::log_generic(LOG_EXCEPTION, "APPLY", true, "BLOCKED_EXCEPTION");
-			misc::block_user(sync_src, true);
 			return false;
 		}
 	}
@@ -498,34 +404,29 @@ namespace big
 		int32_t n = (buffer->m_maxBit + 7) >> 3;
 		uint8_t* data = buffer->m_data;
 
-		bool user = misc::block_user(src);
 		bool type = FIND(event_type, misc::blocked_network) || event_type > NETWORK_CHECK_CATALOG_CRC;
 		bool crash = misc::block_crash(n, data);
 		bool proto = misc::block_proto(src, event_type);
-		bool flood = !user && !type && misc::flood_event(src, event_type, bitset);
+		bool flood = !type && misc::flood_event(src, event_type, bitset);
 		bool clock = event_type == GAME_CLOCK_EVENT && !src->is_host();
-		//bool respawn = misc::flood_respawn(src, event_type); || respawn
+		bool respawn = misc::flood_respawn(src, event_type);
 
-		bool blocked = misc::block_user(src, crash) || type || flood || clock || proto;
+		bool blocked = crash || type || flood || clock || proto || respawn;
 
 		char status[265] = "BLOCKED";
 
 		if (blocked)
 		{
-			if (user) strcat(status, "_USER");
 			if (type) strcat(status, "_TYPE");
 			if (crash) strcat(status, "_CRASH");
 			if (flood) strcat(status, "_FLOOD");
 			if (proto) strcat(status, "_PROTO");
 			if (clock) strcat(status, "_CLOCK");
-			//if (respawn) strcat(status, "_RESPAWN");
+			if (respawn) strcat(status, "_RESPAWN");
 
 			misc::log_network_event(LOG_NETWORK && LOG_FAIL, src, event_type, event_id, bitset, n, data, blocked, status);
 		}
-		else
-		{
-			misc::log_network_event(LOG_NETWORK && LOG_PASS, src, event_type, event_id, bitset, n, data, blocked, status);
-		}
+
 		return blocked;
 	}
 
@@ -567,7 +468,6 @@ namespace big
 			buffer->m_unkBit = buffer->m_maxBit;
 
 			misc::log_network_event(LOG_EXCEPTION, src, event_type, event_id, bitset, n, data, true, "BLOCKED_EXCEPTION");
-			misc::block_user(src, true);
 		}
 		return true;
 	}
@@ -599,6 +499,7 @@ namespace big
 		{
 			misc::log_blue(LOG_EXCEPTION, ",SCRIPT,BLOCKED_EXCEPTION", true);
 		}
+
 		return true;
 	}
 
@@ -635,28 +536,6 @@ namespace big
 		}
 	}
 
-	//static void buffer_int(rage::datBitBuffer* buffer, uint32_t* value, int32_t length, int32_t index)
-	//{
-	//	__try
-	//	{
-	//		g_hooking->m_buffer_int_hook.get_original<functions::buffer_int_t>()(buffer, value, length, index);
-
-	//		if (big::features::protection && big::features::injected)
-	//		{
-	//			if (length == 32)
-	//			{
-	//				misc::log_buff(LOG_BUFF, sync_type, sync_object_type, index, length, *value, false, "OK");
-	//			}
-	//		}
-	//	}
-	//	__except (EXCEPTION_EXECUTE_HANDLER)
-	//	{
-	//		features::sync++;
-	//		misc::log_buff(LOG_EXCEPTION, sync_type, sync_object_type, index, length, 0, true, "BLOCKED_EXCEPTION");
-	//		misc::block_user(sync_src, true);
-	//	}
-	//}
-
 	static GtaThread *find_script_thread(rage::joaat_t hash)
 	{
 		for (auto thread : *g_pointers->m_script_threads)
@@ -669,6 +548,7 @@ namespace big
 				return thread;
 			}
 		}
+
 		return nullptr;
 	}
 
@@ -681,7 +561,6 @@ namespace big
 		m_clone_sync_hook("m_clone_sync_hook", g_pointers->m_clone_sync, &clone_sync),
 		m_clone_remove_hook("m_clone_remove_hook", g_pointers->m_clone_remove, &clone_remove),
 		m_clone_pack_hook("m_clone_pack_hook", g_pointers->m_clone_pack, &clone_pack),
-		//m_buffer_int_hook("m_buffer_int_hook", g_pointers->m_buffer_int, &buffer_int),
 		m_sync_can_apply_hook("netSyncTree_CanApplyToObject", g_pointers->m_sync_can_apply, &sync_can_apply),
 
 		m_sync_read_hook("netSyncTree_ReadFromBuffer", g_pointers->m_sync_read, &sync_read),
@@ -693,7 +572,6 @@ namespace big
 
 		m_network_event_hook("NetworkEvent", g_pointers->m_network_event, &network_event),
 		m_script_event_hook("ScriptEvent", g_pointers->m_script_event, &script_event),
-		//m_game_invite_hook("game_invite", g_pointers->m_game_invite, &game_invite),
 
 		m_run_script_threads_hook("RunScriptThreads", g_pointers->m_run_script_threads, &hooks::run_script_threads),
 		m_convert_thread_to_fiber_hook("ConvertThreadToFiber", memory::module("kernel32.dll").get_export("ConvertThreadToFiber").as<void*>(), &hooks::convert_thread_to_fiber)
@@ -728,12 +606,8 @@ namespace big
 		m_clone_sync_ack_hook.enable();
 		m_clone_remove_ack_hook.enable();
 
-		//m_buffer_int_hook.enable();
-		//m_unregister_object_hook.enable();
-
 		m_network_event_hook.enable();
 		m_script_event_hook.enable();
-		//m_game_invite_hook.enable();
 
 		m_run_script_threads_hook.enable();
 		m_convert_thread_to_fiber_hook.enable();
@@ -755,6 +629,8 @@ namespace big
 		}
 
 		m_enabled = true;
+
+		g_gui.m_opened = true;
 	}
 
 	void hooking::disable()
@@ -774,12 +650,8 @@ namespace big
 		m_convert_thread_to_fiber_hook.disable();
 		m_run_script_threads_hook.disable();
 
-		//m_game_invite_hook.disable();
 		m_script_event_hook.disable();
 		m_network_event_hook.disable();
-
-		//m_unregister_object_hook.disable();
-		//m_buffer_int_hook.disable();
 
 		m_clone_remove_ack_hook.disable();
 		m_clone_sync_ack_hook.disable();

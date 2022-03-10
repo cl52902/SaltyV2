@@ -166,7 +166,6 @@
     <ClInclude Include="src\gta\tls_context.hpp" />
     <ClInclude Include="src\gta_util.hpp" />
     <ClInclude Include="src\gui\gui.hpp" />
-    <ClInclude Include="src\gui\base_tab.h" />
     <ClInclude Include="src\gui\misc.h" />
     <ClInclude Include="src\gui\natives_logging.hpp" />
     <ClInclude Include="src\hooking.hpp" />
@@ -203,7 +202,6 @@
     <ClCompile Include="src\fiber_pool.cpp" />
     <ClCompile Include="src\fonts.cpp" />
     <ClCompile Include="src\gui\gui.cpp" />
-    <ClCompile Include="src\gui\base_tab.cpp" />
     <ClCompile Include="src\gui\misc.cpp" />
     <ClCompile Include="src\gui\natives_logging.cpp" />
     <ClCompile Include="src\hooking.cpp" />

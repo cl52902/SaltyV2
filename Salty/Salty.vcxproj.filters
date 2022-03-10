@@ -42,9 +42,6 @@
       <Filter>gta</Filter>
     </ClInclude>
     <ClInclude Include="src\gta_util.hpp" />
-    <ClInclude Include="src\gui\base_tab.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="src\invoker.hpp" />
     <ClInclude Include="src\logger.hpp" />
     <ClInclude Include="src\memory\fwddec.hpp">
@@ -77,9 +74,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\features.hpp">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\gui.hpp">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\natives_logging.hpp">
@@ -175,15 +169,15 @@
     <ClInclude Include="src\gta\structs.hpp">
       <Filter>gta</Filter>
     </ClInclude>
+    <ClInclude Include="src\gui\gui.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp" />
     <ClCompile Include="src\detour_hook.cpp" />
     <ClCompile Include="src\fiber_pool.cpp" />
     <ClCompile Include="src\fonts.cpp" />
-    <ClCompile Include="src\gui\base_tab.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\invoker.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\memory\module.cpp">
@@ -211,9 +205,6 @@
     <ClCompile Include="src\gui\features.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\gui.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\gui\natives_logging.cpp">
       <Filter>gui</Filter>
     </ClCompile>
@@ -231,6 +222,9 @@
     </ClCompile>
     <ClCompile Include="src\hooking.cpp" />
     <ClCompile Include="src\pointers.cpp" />
+    <ClCompile Include="src\gui\gui.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\gui\protection_research.txt">

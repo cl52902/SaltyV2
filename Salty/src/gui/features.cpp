@@ -3,7 +3,6 @@
 #include "script.hpp"
 #include "natives.hpp"
 #include "gui/misc.h"
-#include "gui/base_tab.h"
 
 namespace big::features
 {

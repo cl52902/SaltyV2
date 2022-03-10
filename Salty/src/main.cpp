@@ -162,21 +162,32 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				//HookDLL("WS2_32.dll", "N/A", sendto_ordinal, sendto_new, (PVOID*)&sendto_old);
 				//HookDLL("WS2_32.dll", "N/A", recvfrom_ordinal, recvfrom_new, (PVOID*)&recvfrom_old);
 
-				LOG(RAW_GREEN_TO_CONSOLE) << u8R"kek(
-  _________      .__   __             ____________________________   ____
- /   _____/____  |  |_/  |_ ___.__.  /  _____/\__    ___/  _  \   \ /   /
- \_____  \\__  \ |  |\   __<   |  | /   \  ___  |    | /  /_\  \   Y   / 
- /        \/ __ \|  |_|  |  \___  | \    \_\  \ |    |/    |    \     /  
-/_______  (____  /____/__|  / ____|  \______  / |____|\____|__  /\___/   
-        \/     \/           \/              \/                \/         .|BBv2|.
-)kek";
+				LOG(RAW_GREEN_TO_CONSOLE) << "Initializing pointers";
+
 				auto pointers_instance = std::make_unique<pointers>();
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Initializing renderer";
+
 				auto renderer_instance = std::make_unique<renderer>();
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Initializing fiber pool";
+
 				auto fiber_pool_instance = std::make_unique<fiber_pool>(10);
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Initializing hooks";
+
 				auto hooking_instance = std::make_unique<hooking>();
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Adding feature scripts";
+
 				g_script_mgr.add_script(std::make_unique<script>(&features::script_func));
+
 				g_script_mgr.add_script(std::make_unique<script>(&gui::script_func));
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Enabling hooking";
+
 				g_hooking->enable();
+
 				big::crash::enable();
 
 				while (g_running)
@@ -193,19 +204,42 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				}
 
 				big::crash::disable();
+
 				features::show_bye();
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Disabling hooking";
+
 				g_hooking->disable();
+
 				std::this_thread::sleep_for(1000ms);
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Removing all feature scripts";
+
 				g_script_mgr.remove_all_scripts();
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Cleaning hooks";
+
 				hooking_instance.reset();
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Cleaning fiber pool";
+
 				fiber_pool_instance.reset();
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Cleaning renderer";
+
 				renderer_instance.reset();
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Cleaning pointers";
+
 				pointers_instance.reset();
 
+				LOG(RAW_GREEN_TO_CONSOLE) << "Unhooking MinHook";
+
 				MH_Uninitialize();
+
+				LOG(RAW_GREEN_TO_CONSOLE) << "Done!";
 			}
 
-			//LOG(INFO) << "Farewell!";
 			logger_instance.reset();
 
 			CloseHandle(g_main_thread);

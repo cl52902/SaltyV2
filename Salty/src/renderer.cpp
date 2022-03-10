@@ -121,7 +121,7 @@ namespace big
 					break;
 
 			case VK_END:
-				g_gui.m_opened = false;
+				g_running = false;
 				break;
 			}
 		}

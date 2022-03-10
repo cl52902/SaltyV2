@@ -38,7 +38,7 @@ namespace big
 		}
 		else
 		{
-			//[hash]() { LOG(WARNING) << "Failed to find " << HEX_TO_UPPER(hash) << " native's handler."; }();
+			[hash]() { LOG(WARNING) << "Failed to find " << hash << " native's handler."; }();
 		}
 	}
 }

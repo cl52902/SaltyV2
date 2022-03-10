@@ -5,6 +5,9 @@
 
 namespace big
 {
+	static int selected_tab = 0;
+	static std::vector<std::string> tabs;
+
 	void gui::dx_init()
 	{
 		static ImVec4 bgColor = ImVec4(0.14f, 0.14f, 0.14f, .94f);
@@ -74,21 +77,48 @@ namespace big
 
 	void gui::dx_on_tick()
 	{
-		TRY_CLAUSE
+		ImGui::SetNextWindowSize(ImVec2{ 750, 400 }, ImGuiCond_Once);
+		ImGui::SetNextWindowPos(ImVec2{ 100, 200 }, ImGuiCond_Once);
+
+		tabs = tabs = { "One", "Two", "Three", "Four", "Settings" };
+
+		if (ImGui::Begin("SaltyV2", &m_opened, ImGuiWindowFlags_NoCollapse))
 		{
-			ImGui::SetNextWindowSize(ImVec2(485, 350), ImGuiCond_FirstUseEver);
-
-			if (ImGui::Begin("SaltyV2"))
+			ImGui::Columns(2);
 			{
-				ImGui::BeginTabBar("##main_tab_bar");
+				ImGui::SetColumnWidth(0, 100.f);
 
-				ImGui::EndTabItem();
+				for (size_t i = 0; i < tabs.size(); i++)
+				{
+					if (ImGui::Selectable(tabs.at(i).c_str(), selected_tab == i))
+						selected_tab = i;
+				}
 
-				ImGui::EndTabBar();
+				ImGui::NextColumn();
+
+				switch (selected_tab)
+				{
+				case 0:
+					ImGui::Text("1");
+					break;
+				case 1:
+					ImGui::Text("2");
+					break;
+				case 2:
+					ImGui::Text("3");
+					break;
+				case 3:
+					ImGui::Text("4");
+					break;
+				case 4:
+					
+					ImGui::Checkbox("Protection", &g_config.protection);
+
+					break;
+				}
 			}
 			ImGui::End();
 		}
-		EXCEPT_CLAUSE
 	}
 
 	void gui::script_init()

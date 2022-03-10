@@ -15,5 +15,12 @@ namespace big
 		bool m_opened{};
 	};
 
+	class config
+	{
+	public:
+		bool protection = false;
+	};
+
+	inline config g_config;
 	inline gui g_gui;
 }

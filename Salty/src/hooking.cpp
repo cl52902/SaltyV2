@@ -14,7 +14,7 @@
 #include "vmt_hook.hpp"
 
 #include "gui/misc.h"
-#include "gui.hpp"
+#include "gui/gui.hpp"
 #include "gui/natives_logging.hpp"
 
 namespace big
@@ -58,20 +58,23 @@ namespace big
 
 		char status[256] = "BLOCKED";
 
-		if (blocked)
+		if (g_config.protection)
 		{
-			if (user) strcat(status, "_USER");
-			if (owner) strcat(status, "_OWNER");
+			if (blocked)
+			{
+				if (user) strcat(status, "_USER");
+				if (owner) strcat(status, "_OWNER");
 
-			misc::log_clone(LOG_FAIL, sync_src, "CREATE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-		}
-		else
-		{
-			misc::log_clone(LOG_PASS, sync_src, "CREATE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-		}
-		if (blocked)
-		{
-			return;
+				misc::log_clone(LOG_FAIL, sync_src, "CREATE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
+			}
+			else
+			{
+				misc::log_clone(LOG_PASS, sync_src, "CREATE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
+			}
+			if (blocked)
+			{
+				return;
+			}
 		}
 
 		__try
@@ -97,22 +100,25 @@ namespace big
 
 		char status[256] = "BLOCKED";
 
-		if (blocked)
+		if (g_config.protection)
 		{
-			if (user) strcat(status, "_USER");
-			if (owner) strcat(status, "_OWNER");
+			if (blocked)
+			{
+				if (user) strcat(status, "_USER");
+				if (owner) strcat(status, "_OWNER");
 
-			misc::log_clone(LOG_FAIL, sync_src, "SYNC_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-		}
-		else
-		{
-			misc::log_clone(LOG_PASS, sync_src, "SYNC_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-		}
-		if (blocked)
-		{
-			//NOT DATBITBUFFER
-			//buffer->m_unkBit = buffer->m_maxBit;
-			return;
+				misc::log_clone(LOG_FAIL, sync_src, "SYNC_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
+			}
+			else
+			{
+				misc::log_clone(LOG_PASS, sync_src, "SYNC_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
+			}
+			if (blocked)
+			{
+				//NOT DATBITBUFFER
+				//buffer->m_unkBit = buffer->m_maxBit;
+				return;
+			}
 		}
 
 		__try
@@ -145,20 +151,23 @@ namespace big
 
 		char status[256] = "BLOCKED";
 
-		if (blocked)
+		if (g_config.protection)
 		{
-			if (user) strcat(status, "_USER");
-			if (owner) strcat(status, "_OWNER");
+			if (blocked)
+			{
+				if (user) strcat(status, "_USER");
+				if (owner) strcat(status, "_OWNER");
 
-			misc::log_clone(LOG_FAIL, sync_src, "REMOVE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-		}
-		else
-		{
-			misc::log_clone(LOG_PASS, sync_src, "REMOVE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
-		}
-		if (blocked)
-		{
-			return;
+				misc::log_clone(LOG_FAIL, sync_src, "REMOVE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
+			}
+			else
+			{
+				misc::log_clone(LOG_PASS, sync_src, "REMOVE_ACK", object_type, object_id, 0, 0, ack_code, blocked, status);
+			}
+			if (blocked)
+			{
+				return;
+			}
 		}
 
 		__try
@@ -186,22 +195,25 @@ namespace big
 
 		char status[256] = "BLOCKED";
 
-		if (blocked)
+		if (g_config.protection)
 		{
-			if (user) strcat(status, "_USER");
-			if (proto) strcat(status, "_PROTO");
-			if (flood) strcat(status, "_FLOOD");
+			if (blocked)
+			{
+				if (user) strcat(status, "_USER");
+				if (proto) strcat(status, "_PROTO");
+				if (flood) strcat(status, "_FLOOD");
 
-			misc::log_clone(LOG_FAIL, sync_src, "PACK", -1, 0, 0, 0, 0, blocked, status);
-		}
-		else
-		{
-			misc::log_clone(LOG_PASS, sync_src, "PACK", -1, 0, 0, 0, 0, blocked, status);
-		}
-		if (blocked)
-		{
-			buffer->m_unkBit = buffer->m_maxBit;
-			return;
+				misc::log_clone(LOG_FAIL, sync_src, "PACK", -1, 0, 0, 0, 0, blocked, status);
+			}
+			else
+			{
+				misc::log_clone(LOG_PASS, sync_src, "PACK", -1, 0, 0, 0, 0, blocked, status);
+			}
+			if (blocked)
+			{
+				buffer->m_unkBit = buffer->m_maxBit;
+				return;
+			}
 		}
 
 		__try
@@ -247,31 +259,35 @@ namespace big
 
 		char status[256] = "BLOCKED";
 
-		if (blocked)
+		if (g_config.protection)
 		{
-			if (user) strcat(status, "_USER");
-			if (type) strcat(status, "_TYPE");
-			if (crash) strcat(status, "_CRASH");
-			if (limit) strcat(status, "_LIMIT");
-			if (time) strcat(status, "_TIME");
-			if (proto) strcat(status, "_PROTO");
-			if (owner) strcat(status, "_OWNER");
-			if (flood) strcat(status, "_FLOOD");
+			if (blocked)
+			{
+				if (user) strcat(status, "_USER");
+				if (type) strcat(status, "_TYPE");
+				if (crash) strcat(status, "_CRASH");
+				if (limit) strcat(status, "_LIMIT");
+				if (time) strcat(status, "_TIME");
+				if (proto) strcat(status, "_PROTO");
+				if (owner) strcat(status, "_OWNER");
+				if (flood) strcat(status, "_FLOOD");
 
-			misc::log_clone(LOG_FAIL, sync_src, "CREATE", object_type, object_id, object_flag, timestamp, 0, blocked, status);
-		}
-		else
-		{
-			misc::log_clone(LOG_PASS, sync_src, "CREATE", object_type, object_id, object_flag, timestamp, 0, blocked, status);
-		}
+				misc::log_clone(LOG_FAIL, sync_src, "CREATE", object_type, object_id, object_flag, timestamp, 0, blocked, status);
+			}
+			else
+			{
+				misc::log_clone(LOG_PASS, sync_src, "CREATE", object_type, object_id, object_flag, timestamp, 0, blocked, status);
+			}
 
-		if (blocked)
-		{
-			buffer->m_unkBit = buffer->m_maxBit;
-			//timestamp = 0;
-			return true;
-		}
+			if (blocked)
+			{
+				buffer->m_unkBit = buffer->m_maxBit;
+				//timestamp = 0;
+				return true;
+			}
 
+		}
+		
 		__try
 		{
 			buffer_expand(buffer);
@@ -314,28 +330,31 @@ namespace big
 
 		char status[256] = "BLOCKED";
 
-		if (blocked)
+		if (g_config.protection)
 		{
-			if (user) strcat(status, "_USER");
-			if (type) strcat(status, "_TYPE");
-			if (crash) strcat(status, "_CRASH");
-			if (time) strcat(status, "_TIME");
-			if (proto) strcat(status, "_PROTO");
-			if (owner) strcat(status, "_OWNER");
-			if (change) strcat(status, "_CHANGE");
+			if (blocked)
+			{
+				if (user) strcat(status, "_USER");
+				if (type) strcat(status, "_TYPE");
+				if (crash) strcat(status, "_CRASH");
+				if (time) strcat(status, "_TIME");
+				if (proto) strcat(status, "_PROTO");
+				if (owner) strcat(status, "_OWNER");
+				if (change) strcat(status, "_CHANGE");
 
-			misc::log_clone(LOG_FAIL, sync_src, "SYNC", object_type, object_id, 0, timestamp, 0, blocked, status);
-		}
-		else
-		{
-			misc::log_clone(LOG_PASS, sync_src, "SYNC", object_type, object_id, 0, timestamp, 0, blocked, status);
-		}
+				misc::log_clone(LOG_FAIL, sync_src, "SYNC", object_type, object_id, 0, timestamp, 0, blocked, status);
+			}
+			else
+			{
+				misc::log_clone(LOG_PASS, sync_src, "SYNC", object_type, object_id, 0, timestamp, 0, blocked, status);
+			}
 
-		if (blocked)
-		{
-			buffer->m_unkBit = buffer->m_maxBit;
-			//timestamp = 0;
-			return true;
+			if (blocked)
+			{
+				buffer->m_unkBit = buffer->m_maxBit;
+				//timestamp = 0;
+				return true;
+			}
 		}
 
 		__try
@@ -372,21 +391,24 @@ namespace big
 
 		char status[256] = "BLOCKED";
 
-		if (blocked)
+		if (g_config.protection)
 		{
-			if (user) strcat(status, "_USER");
-			if (proto) strcat(status, "_PROTO");
-			if (owner) strcat(status, "_OWNER");
+			if (blocked)
+			{
+				if (user) strcat(status, "_USER");
+				if (proto) strcat(status, "_PROTO");
+				if (owner) strcat(status, "_OWNER");
 
-			misc::log_clone(LOG_FAIL, sync_src, "REMOVE", 0, object_id, 0, 0, 0, blocked, status);
-		}
-		else
-		{
-			misc::log_clone(LOG_PASS, sync_src, "REMOVE", 0, object_id, 0, 0, 0, blocked, status);
-		}
-		if (blocked)
-		{
-			return;
+				misc::log_clone(LOG_FAIL, sync_src, "REMOVE", 0, object_id, 0, 0, 0, blocked, status);
+			}
+			else
+			{
+				misc::log_clone(LOG_PASS, sync_src, "REMOVE", 0, object_id, 0, 0, 0, blocked, status);
+			}
+			if (blocked)
+			{
+				return;
+			}
 		}
 
 		__try
@@ -429,31 +451,34 @@ namespace big
 
 		bool blocked = model || close || location || flood;
 
-		if (blocked)
+		if (g_config.protection)
 		{
-			uint32_t hash = netSyncTree->m_sync_tree_node->model(netObject->object_type);
-
-			if (model) strcat(status, "_MODEL");
-			if (close) strcat(status, "_CLOSE");
-			if (location) strcat(status, "_LOCATION");
-			if (flood) strcat(status, "_FLOOD");
-
-			if (model)
+			if (blocked)
 			{
-				misc::log_model(LOG_INTERNAL && LOG_FAIL, "MODEL", netObject->object_type, hash, blocked, status);
+				uint32_t hash = netSyncTree->m_sync_tree_node->model(netObject->object_type);
+
+				if (model) strcat(status, "_MODEL");
+				if (close) strcat(status, "_CLOSE");
+				if (location) strcat(status, "_LOCATION");
+				if (flood) strcat(status, "_FLOOD");
+
+				if (model)
+				{
+					misc::log_model(LOG_INTERNAL && LOG_FAIL, "MODEL", netObject->object_type, hash, blocked, status);
+				}
+				//else
+				//{
+				//	misc::log_generic(LOG_INTERNAL && LOG_FAIL, "APPLY", blocked, status);
+				//}
 			}
 			//else
 			//{
-			//	misc::log_generic(LOG_INTERNAL && LOG_FAIL, "APPLY", blocked, status);
+			//	misc::log_generic(LOG_INTERNAL && LOG_PASS, "APPLY", blocked, status);
 			//}
-		}
-		//else
-		//{
-		//	misc::log_generic(LOG_INTERNAL && LOG_PASS, "APPLY", blocked, status);
-		//}
-		if (blocked)
-		{
-			return false;
+			if (blocked)
+			{
+				return false;
+			}
 		}
 
 		__try
@@ -515,15 +540,19 @@ namespace big
 		sync_type = rage::NETWORK;
 		sync_object_type = -1;
 
-		if (event_blocked(src, dst, buffer, event_type, event_id, bitset))
+		if (g_config.protection)
 		{
-			_event_type = NETWORK_TRAIN_REPORT_EVENT;
-			buffer->m_data[0] = 0;
-		}
-		else if (event_type == GIVE_CONTROL_EVENT)
-		{
-			sync_src = src;
-			sync_type = rage::TAKEOVER;
+			if (event_blocked(src, dst, buffer, event_type, event_id, bitset))
+			{
+				_event_type = NETWORK_TRAIN_REPORT_EVENT;
+				buffer->m_data[0] = 0;
+			}
+			else if (event_type == GIVE_CONTROL_EVENT)
+			{
+				sync_src = src;
+				sync_type = rage::TAKEOVER;
+			}
+
 		}
 
 		__try
@@ -554,10 +583,13 @@ namespace big
 
 		bool blocked = empty || value || range || length || blocked_0 || blocked_2;
 
-		misc::log_script_event(LOG_SCRIPT, group, event_id, n, data, blocked);
+		if (g_config.protection)
+		{
+			misc::log_script_event(LOG_SCRIPT, group, event_id, n, data, blocked);
 
-		if (blocked) 
-			return true;
+			if (blocked)
+				return true;
+		}
 
 		__try
 		{

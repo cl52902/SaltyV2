@@ -540,13 +540,8 @@ namespace big
 	{
 		for (auto thread : *g_pointers->m_script_threads)
 		{
-			if (thread
-				&& thread->m_context.m_thread_id
-				&& thread->m_handler
-				&& thread->m_script_hash == hash)
-			{
+			if (thread && thread->m_context.m_thread_id && thread->m_handler && thread->m_script_hash == hash)
 				return thread;
-			}
 		}
 
 		return nullptr;
@@ -557,24 +552,24 @@ namespace big
 		m_swapchain_hook(*g_pointers->m_swapchain, hooks::swapchain_num_funcs),
 		m_set_cursor_pos_hook("SetCursorPos", memory::module("user32.dll").get_export("SetCursorPos").as<void*>(), &hooks::set_cursor_pos),
 
+		m_run_script_threads_hook("RunScriptThreads", g_pointers->m_run_script_threads, &hooks::run_script_threads),
+		m_convert_thread_to_fiber_hook("ConvertThreadToFiber", memory::module("kernel32.dll").get_export("ConvertThreadToFiber").as<void*>(), &hooks::convert_thread_to_fiber),
+
+		m_clone_pack_hook("m_clone_pack_hook", g_pointers->m_clone_pack, &clone_pack),
 		m_clone_create_hook("m_clone_create_hook", g_pointers->m_clone_create, &clone_create),
 		m_clone_sync_hook("m_clone_sync_hook", g_pointers->m_clone_sync, &clone_sync),
 		m_clone_remove_hook("m_clone_remove_hook", g_pointers->m_clone_remove, &clone_remove),
-		m_clone_pack_hook("m_clone_pack_hook", g_pointers->m_clone_pack, &clone_pack),
-		m_sync_can_apply_hook("netSyncTree_CanApplyToObject", g_pointers->m_sync_can_apply, &sync_can_apply),
-
-		m_sync_read_hook("netSyncTree_ReadFromBuffer", g_pointers->m_sync_read, &sync_read),
-
-		m_unregister_object_hook("m_unregister_object_hook", g_pointers->m_unregister_object, &unregister_object),
 		m_clone_create_ack_hook("m_clone_create_ack_hook", g_pointers->m_clone_create_ack, &clone_create_ack),
 		m_clone_sync_ack_hook("m_clone_sync_ack_hook", g_pointers->m_clone_sync_ack, &clone_sync_ack),
 		m_clone_remove_ack_hook("m_clone_remove_ack_hook", g_pointers->m_clone_remove_ack, &clone_remove_ack),
-
+	
 		m_network_event_hook("NetworkEvent", g_pointers->m_network_event, &network_event),
 		m_script_event_hook("ScriptEvent", g_pointers->m_script_event, &script_event),
 
-		m_run_script_threads_hook("RunScriptThreads", g_pointers->m_run_script_threads, &hooks::run_script_threads),
-		m_convert_thread_to_fiber_hook("ConvertThreadToFiber", memory::module("kernel32.dll").get_export("ConvertThreadToFiber").as<void*>(), &hooks::convert_thread_to_fiber)
+		m_unregister_object_hook("m_unregister_object_hook", g_pointers->m_unregister_object, &unregister_object),
+
+		m_sync_read_hook("netSyncTree_ReadFromBuffer", g_pointers->m_sync_read, &sync_read),
+		m_sync_can_apply_hook("netSyncTree_CanApplyToObject", g_pointers->m_sync_can_apply, &sync_can_apply)
 	{
 		m_swapchain_hook.hook(hooks::swapchain_present_index, &hooks::swapchain_present);
 		m_swapchain_hook.hook(hooks::swapchain_resizebuffers_index, &hooks::swapchain_resizebuffers);
@@ -584,7 +579,8 @@ namespace big
 
 	hooking::~hooking()
 	{
-		if (m_enabled) disable();
+		if (m_enabled) 
+			disable();
 
 		g_hooking = nullptr;
 	}
@@ -595,13 +591,13 @@ namespace big
 		m_og_wndproc = reinterpret_cast<WNDPROC>(SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&hooks::wndproc)));
 		m_set_cursor_pos_hook.enable();
 
+		m_run_script_threads_hook.enable();
+		m_convert_thread_to_fiber_hook.enable();
+
 		m_clone_pack_hook.enable();
 		m_clone_create_hook.enable();
 		m_clone_sync_hook.enable();
 		m_clone_remove_hook.enable();
-		m_sync_read_hook.enable();
-		m_sync_can_apply_hook.enable();
-
 		m_clone_create_ack_hook.enable();
 		m_clone_sync_ack_hook.enable();
 		m_clone_remove_ack_hook.enable();
@@ -609,8 +605,10 @@ namespace big
 		m_network_event_hook.enable();
 		m_script_event_hook.enable();
 
-		m_run_script_threads_hook.enable();
-		m_convert_thread_to_fiber_hook.enable();
+		m_unregister_object_hook.enable();
+
+		m_sync_read_hook.enable();
+		m_sync_can_apply_hook.enable();
 
 		ensure_dynamic_hooks();
 
@@ -618,6 +616,7 @@ namespace big
 		{
 			m_native.emplace(native.first, native.second);
 		}
+
 		for (auto native : misc::natives_logging)
 		{
 			m_native.emplace(native.first, native.second);
@@ -637,36 +636,36 @@ namespace big
 	{
 		m_enabled = false;
 
+		m_swapchain_hook.disable();
+		SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_og_wndproc));
+		m_set_cursor_pos_hook.disable();
+
+		m_run_script_threads_hook.disable();
+		m_convert_thread_to_fiber_hook.disable();
+
+		m_clone_pack_hook.disable();
+		m_clone_create_hook.disable();
+		m_clone_sync_hook.disable();
+		m_clone_remove_hook.disable();
+		m_clone_create_ack_hook.disable();
+		m_clone_sync_ack_hook.disable();
+		m_clone_remove_ack_hook.disable();
+
+		m_network_event_hook.disable();
+		m_script_event_hook.disable();
+
+		m_unregister_object_hook.disable();
+
+		m_sync_read_hook.disable();
+		m_sync_can_apply_hook.disable();
+
 		for (auto hook : m_native_hook)
 		{
 			delete hook;
 		}
 
 		if (m_main_persistent_hook)
-		{
 			m_main_persistent_hook->disable();
-		}
-
-		m_convert_thread_to_fiber_hook.disable();
-		m_run_script_threads_hook.disable();
-
-		m_script_event_hook.disable();
-		m_network_event_hook.disable();
-
-		m_clone_remove_ack_hook.disable();
-		m_clone_sync_ack_hook.disable();
-		m_clone_create_ack_hook.disable();
-
-		m_sync_can_apply_hook.disable();
-		m_sync_read_hook.disable();
-		m_clone_remove_hook.disable();
-		m_clone_sync_hook.disable();
-		m_clone_create_hook.disable();
-		m_clone_pack_hook.disable();
-
-		m_set_cursor_pos_hook.disable();
-		SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_og_wndproc));
-		m_swapchain_hook.disable();
 	}
 
 	void hooking::ensure_dynamic_hooks()
